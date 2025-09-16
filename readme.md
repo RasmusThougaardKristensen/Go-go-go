@@ -76,18 +76,14 @@ Go-go-go/
 
 3. **Set up PostgreSQL database**
    ```sql
-   CREATE DATABASE go_go_go_db;
-   CREATE USER supply_user WITH PASSWORD 'your_password';
-   GRANT ALL PRIVILEGES ON DATABASE go_go_go_db TO supply_user;
+   CREATE DATABASE User.Management;
    ```
 
 4. **Configure environment variables**
    ```bash
    export DB_HOST=localhost
    export DB_PORT=5432
-   export DB_USER=supply_user
-   export DB_PASSWORD=your_password
-   export DB_NAME=go_go_go_db
+   export DB_NAME=User.Management
    ```
 
 5. **Run the application**
@@ -101,12 +97,13 @@ The server will start on `http://localhost:8080`
 
 ### Users Table
 ```sql
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE users
+(
+    id    UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Auto-generate UUID like C# Guid.NewGuid()
+    name  VARCHAR(100)        NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL
 );
 ```
 
@@ -129,7 +126,7 @@ curl http://localhost:8080/users
 
 ### Update a user
 ```bash
-curl -X PUT http://localhost:8080/users/1 \
+curl -X PUT http://localhost:8080/users/{uuid} \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Jane Doe",
@@ -139,7 +136,7 @@ curl -X PUT http://localhost:8080/users/1 \
 
 ### Delete a user
 ```bash
-curl -X DELETE http://localhost:8080/users/1
+curl -X DELETE http://localhost:8080/users/{uuid}
 ```
 
 ## Development
