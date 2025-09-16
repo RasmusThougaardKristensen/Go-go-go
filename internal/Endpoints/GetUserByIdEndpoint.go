@@ -1,20 +1,43 @@
 package Endpoints
 
 import (
-	"GoSupplyChain/internal/Domain/models"
+	"GoSupplyChain/internal/Application/Repositories"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-func GetUserEndpoint(context *gin.Context) {
-	id := context.Param("id")
+type GetUserByIdEndpoint struct {
+	userRepository IRepositories.IUserRepository
+}
 
-	for _, user := range models.UserModels {
-		if user.Id == id {
-			context.IndentedJSON(http.StatusOK, user)
-			return
-		}
+func GetUserEndpoints(userRepo IRepositories.IUserRepository) *GetUserByIdEndpoint {
+	return &GetUserByIdEndpoint{
+		userRepository: userRepo,
 	}
-	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "User not found"})
+}
+
+func (endpoint *GetUserByIdEndpoint) GetUserEndpoint(context *gin.Context) {
+	id := context.Param("id")
+	user, err := endpoint.userRepository.GetUserById(id)
+
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			context.JSON(http.StatusNotFound, gin.H{
+				"error": "User not found",
+			})
+		} else if strings.Contains(err.Error(), "invalid UUID format") {
+			context.JSON(http.StatusBadRequest, gin.H{
+				"error": "Invalid user ID format",
+			})
+		} else {
+			context.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Internal server error",
+			})
+		}
+		return
+	}
+
+	context.JSON(http.StatusOK, user)
 }
