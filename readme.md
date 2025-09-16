@@ -35,24 +35,23 @@ This project demonstrates a modern REST API architecture using Go's Gin framewor
 ```
 Go-go-go/
 ├── cmd/
-│   ├── server/
-│   │   └── main.go                 # Application entry point
+│   └── server/
+│       └── main.go                  # Application entry point
 ├── internal/
-│   ├── Endpoints/                  # HTTP endpoints(handlers)
-│   │   └── Users
-│   └── Domain/
-│   │    └── models/                # Data models
-│   │       └── Users
-│   └── Application/
-│   │    └── Use Cases/              # Use cases
-│   │       └── Users
-└── Infrastucture/
-│   │    └── Repository/            # Repository
-│   │       └── Users
-│   │    └── Components/            # Thrid party integrations
-│           └── XYZ
+│   ├── Application/
+│   ├── Domain/
+│   │   └── UseCases/               # Business logic layer
+│   │   └── models/
+│   │       └── UserModel.go        # Domain models/entities
+│   ├── Endpoints/                  # HTTP handlers/controllers
+│   │   ├── CreateUserEndpoint.go
+│   │   ├── DeleteUserEndpoint.go
+│   │   ├── GetUserByIdEndpoint.go
+│   │   ├── GetUserEndpoint.go
+│   │   └── UpdateUserEndpoint.go
+│   └── Infrastructure/
+│       └── Repositories/           # Data access layer
 ├── go.mod                          # Go modules file
-├── go.sum                          # Go dependencies
 └── README.md                       # Project documentation
 ```
 
