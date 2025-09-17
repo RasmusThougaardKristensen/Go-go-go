@@ -1,9 +1,19 @@
 package models
 
+import "github.com/google/uuid"
+
 type UserModel struct {
 	Id    string
 	Name  string
 	Email string
+}
+
+func User(name, email string) UserModel {
+	return UserModel{
+		Id:    uuid.New().String(),
+		Name:  name,
+		Email: email,
+	}
 }
 
 var UserModels = []UserModel{
