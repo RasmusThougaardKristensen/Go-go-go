@@ -26,10 +26,11 @@ func main() {
 
 func userEndpoints(router *gin.Engine, repository IRepositories.IUserRepository) {
 	getUserEndpoints := Endpoints.GetUserEndpoints(repository)
+	createUserEndpoint := Endpoints.CreateUserEndpoint(repository)
 
 	router.GET("/users", Endpoints.GetUsersEndpoint)
 	router.GET("/users/:id", getUserEndpoints.GetUserEndpoint)
-	router.POST("/users", Endpoints.CreateUserEndpoint)
+	router.POST("/users", createUserEndpoint.CreateUserEndpoint)
 	router.DELETE("/users/:id", Endpoints.DeleteUserEndpoint)
 	router.PUT("/users/:id", Endpoints.UpdateUserEndpoint)
 }
