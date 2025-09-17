@@ -39,6 +39,20 @@ func (userRepository *UserRepository) GetUserById(id string) (*models.UserModel,
 	return mapToModel(entity), nil
 }
 
+func (userRepository *UserRepository) CreateUser(userModel *models.UserModel) error {
+	var entity *UserEntity
+	entity = mapToEntity(*userModel)
+
+	query := `INSERT INTO users (id, name, email) VALUES ($1, $2, $3)`
+
+	_, err := userRepository.database.Exec(query, entity.Id, entity.Name, entity.Email)
+	if err != nil {
+		return fmt.Errorf("error creating user")
+	}
+
+	return nil
+}
+
 func mapToEntity(user models.UserModel) *UserEntity {
 	return &UserEntity{
 		Id:    user.Id,
